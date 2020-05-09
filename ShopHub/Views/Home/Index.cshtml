@@ -1,8 +1,17 @@
-﻿@{
+﻿@using  ShopHub.Services.Interface
+@inject ISessionManager _sessionManager
+
+@{
     ViewData["Title"] = "Home Page";
+    var name = _sessionManager.GetUserName();
+
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome @name</h1>
+    
+</div>
+
+<div class="text-center">
+    <a href="/AuthUser/Logout">Logout</a>
 </div>

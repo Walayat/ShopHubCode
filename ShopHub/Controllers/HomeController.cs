@@ -5,17 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ShopHub.Filters;
 using ShopHub.Models;
+using ShopHub.Services.Interface;
+using ShopHub.Services.Utilities.Enums;
 
 namespace ShopHub.Controllers
 {
+    [AuthFilter(UserTypeNames.Admin, UserTypeNames.Customer)]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ISessionManager _sessionManager;
+        public HomeController(ISessionManager sessionManager)
         {
-            _logger = logger;
+            _sessionManager = sessionManager;
         }
 
         public IActionResult Index()
@@ -23,15 +26,9 @@ namespace ShopHub.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult AccessDenied()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
