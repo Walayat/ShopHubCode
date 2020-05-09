@@ -28,12 +28,24 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                     </ul>
+                </div>
+                <div>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item">
-                            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" class="nav-link">Profile</a>
+                            @if (string.IsNullOrEmpty(name))
+                            {
+                                <a href="/AuthUser/Login" class="btn btn-link navbar-btn navbar-link">Login</a>
+                            }
+                            else
+                            {
+                                <a href="/AuthUser/Logout" class="btn btn-link navbar-btn navbar-link">Logout</a>
+                            }
                         </li>
                         <li class="nav-item">
-                            <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
+                            @if (!string.IsNullOrEmpty(name))
+                            {
+                              <span class="btn navbar-btn">Welcome: &nbsp; @name</span>
+                            }
                         </li>
                     </ul>
                 </div>
