@@ -1,78 +1,52 @@
 ﻿@model ShopHub.Models.Dtos.ProductDto
+
+@using  ShopHub.Services.Utilities.Enums
 @using  ShopHub.Services.Interface
 @inject ISessionManager _sessionManager
-@using  ShopHub.Services.Utilities.Enums
 
 @{
-    ViewData["Title"] = "StorePlace";
+    ViewData["Title"] = "Store Place";
     var name = _sessionManager.GetUserName();
     var userId = _sessionManager.GetUserId();
-    var userTypeId = _sessionManager.GetUserTypeId();
 }
 
 
-<div class="sidenav">
-    <ul class="leftSideUl">
-        <li><h2 class="shopHubHeading">Shop Hub</h2></li>
+<div class="text-center">
+    <h1>Store Place</h1>
+    <hr>
 
-        @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
-        {
-            <li><a asp-action="AllOrderHistory" asp-controller="Admin">All Order History</a></li>
-            <li><a asp-action="LocationOrderHistory" asp-controller="Admin">Location By Order</a></li>
-            <li><a asp-action="Location" asp-controller="Admin">Manage Locations</a></li>
-            <li><a asp-action="ProductList" asp-controller="Admin">Manage Products</a></li>
-        }
-        else
-        {
-            <li><a asp-action="StorePlace" asp-controller="Customer">Stores</a></li>
-            <li><a asp-action="OrderHistory" asp-controller="Customer">Orders History</a></li>
-        }
-
-    </ul>
-
-</div>
-
-<div class="main">
-    <div class="text-center">
-
-        <h1>Store Place</h1>
-        <hr>
-
-        <div class="form-group">
-            <label class="control-label"> Select Store Location</label>
-            <select asp-for="LocationId" id="storeDropDown" onchange="populateProducts();" class="form-control" asp-items="@(new SelectList(Model.Locations,"Id","Name"))"></select>
-            <span asp-validation-for="LocationId" class="text-danger"></span>
-        </div>
-
-
-
-        <table class="table table-bordered table-hover" id="storeTable">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Price)
-                    </th>
-
-                    <th>
-                        @Html.DisplayNameFor(model => model.Location)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Quantity)
-                    </th>
-                    <th>
-                        Order
-                    </th>
-
-                </tr>
-            </thead>
-            <tbody id="productsBody">
-            </tbody>
-        </table>
+    <div class="form-group">
+        <label class="control-label"> Select Store Location</label>
+        <select asp-for="LocationId" id="storeDropDown" onchange="populateProducts();" class="form-control" asp-items="@(new SelectList(Model.Locations,"Id","Name"))"></select>
+        <span asp-validation-for="LocationId" class="text-danger"></span>
     </div>
 
+
+    <table class="table table-bordered table-hover" id="storeTable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th>
+                    Order
+                </th>
+
+            </tr>
+        </thead>
+        <tbody id="productsBody">
+        </tbody>
+    </table>
 </div>
 
 
@@ -151,7 +125,7 @@
 
                 $.get("/Customer/PlaceOrder", { userId: @userId, productId: productId, quantity: parseInt(quantityRequire), actualStockQuantity: parseInt(availableQuantity)}).done(function (data) {
                     debugger;
-                    
+
                     if (!data.isError) {
                         $('#quantityValue-' + productId).val('');
                         new PNotify({

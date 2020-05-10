@@ -1,38 +1,9 @@
 ﻿@model ShopHub.Models.Dtos.LocationDto
-@using  ShopHub.Services.Interface
-@inject ISessionManager _sessionManager
-@using  ShopHub.Services.Utilities.Enums
-
 
 @{
     ViewData["Title"] = "Locations";
-    var name = _sessionManager.GetUserName();
-    var userTypeId = _sessionManager.GetUserTypeId();
 }
 
-
-<div class="sidenav">
-    <ul class="leftSideUl">
-        <li><h2 class="shopHubHeading">Shop Hub</h2></li>
-
-        @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
-        {
-            <li><a asp-action="AllOrderHistory" asp-controller="Admin">All Order History</a></li>
-            <li><a asp-action="LocationOrderHistory" asp-controller="Admin">Location By Order</a></li>
-            <li><a asp-action="Location" asp-controller="Admin">Manage Locations</a></li>
-            <li><a asp-action="ProductList" asp-controller="Admin">Manage Products</a></li>
-        }
-        else
-        {
-            <li><a asp-action="StorePlace" asp-controller="Customer">Stores</a></li>
-            <li><a href="#services">Orders History</a></li>
-        }
-
-    </ul>
-
-</div>
-
-<div class="main">
     <div class="text-center">
         <h4>Location</h4>
         <hr />
@@ -58,7 +29,6 @@
 
     </div>
 
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
