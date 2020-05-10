@@ -15,6 +15,13 @@ namespace ShopHub.Controllers
     [AuthFilter(UserTypeNames.Admin)]
     public class AdminController : Controller
     {
+        /*Dependency Injection Code Start
+         As we are not creating instance like
+         ProductService product = new ProductService()
+         we are creating private type of class type variable (obj)
+         which is populating from constructor. So there is not need
+         to dispose the object it will automatically dispose from memroy
+             */
         private ILocation _location;
         private IProductService _productService;
         private IOrderService _orderService;
@@ -24,6 +31,7 @@ namespace ShopHub.Controllers
             _productService = productService;
             _orderService = orderService;
         }
+        /*Dependency Injection Code End*/
 
 
         #region Location i.e Create, Delete , List
@@ -34,6 +42,15 @@ namespace ShopHub.Controllers
             return View();
         }
 
+        /* Post method for create location
+           In every post method I am checking 
+           the server side validation that they 
+           are ok or not as defined on annoations.
+           If model data is valid then I am using 
+           CreateLocation service to create location.
+           As these services interacting with database
+           layer and interchange data in all out application.
+             */
         [HttpPost]
         public IActionResult CreateLocation(LocationDto location)
         {
@@ -47,13 +64,21 @@ namespace ShopHub.Controllers
                 return View(location);
             }
         }
-
+        /*As clear from name this method is for delete the
+         location by its Id, and after remove location
+         RedirectToAction redirect page to location listing
+         page where we can see location is remove or not.
+             */
         public IActionResult DeleteLocation(int locationId)
         {
             _location.RemoveLocation(locationId);
             return RedirectToAction("Location");
         }
 
+        /*This method is simply use to get all locations
+         using service GetAllLocations, this method is use
+         for listing purpose.
+             */
         public IActionResult Location()
         {
             var locations = _location.GetAllLocations();
@@ -67,6 +92,10 @@ namespace ShopHub.Controllers
 
 
         #region Products All CRUD
+
+        /* Get method for create product
+        Here I am using GetAllLocations service to 
+        populate locations dropdown*/
 
         [HttpGet]
         public IActionResult CreateProduct()
@@ -84,6 +113,13 @@ namespace ShopHub.Controllers
             return View(product);
         }
 
+        /* Post method for create product
+           In every post method I am checking 
+           the server side validation that they 
+           are ok or not as defined on annoations.
+           If model data is valid then I am using 
+           AddProduct service to create product.
+             */
         [HttpPost]
         public IActionResult CreateProduct(ProductDto product)
         {
@@ -98,6 +134,10 @@ namespace ShopHub.Controllers
             }
         }
 
+        /*This method is simply use to get all products
+         using service GetAllProducts, this method is use
+         for listing purpose.
+             */
         public IActionResult ProductList()
         {
             var products = _productService.GetAllProducts();
@@ -108,13 +148,23 @@ namespace ShopHub.Controllers
             return View(products);
         }
 
+        /*As clear from name this method is for delete the
+         product by its Id, and after remove product
+         RedirectToAction redirect page to product listing
+         page where we can see product is remove or not.
+             */
         public IActionResult DeleteProduct(int productId)
         {
             _productService.RemoveProduct(productId);
             return RedirectToAction("ProductList");
         }
 
-
+        /*This method is use to update product,
+          as this is the get method so it will 
+          populate relevant data to its fields.
+          I am getting the product by its Id and 
+          then populating its fields for update.
+             */
         [HttpGet]
         public IActionResult UpdateProduct(int productId)
         {
@@ -132,6 +182,10 @@ namespace ShopHub.Controllers
            return View(productData);
         }
 
+        /*As this one this the post method I am using 
+         UpdateProduct service to update and then redirecting
+         my page to listing page to see the changes reflects.
+             */
         [HttpPost]
         public IActionResult UpdateProduct(ProductDto product)
         {
@@ -152,7 +206,7 @@ namespace ShopHub.Controllers
         //This method is for Location base order
         //In this method I just populating the locations
         //dropdown. Location base order history will
-        // populating with another method by making an ajax call
+        // populating with another method by making an ajax get call
         public IActionResult LocationOrderHistory()
         {
             OrderDto product = new OrderDto();
@@ -179,7 +233,7 @@ namespace ShopHub.Controllers
            return Json(data);
         }
 
-        // In this method all order of stors are populating
+        // In this method all order of stores are populating without any location specify
         public IActionResult AllOrderHistory()
         {
             var orderDetails = _orderService.GetAllOrderHistory();

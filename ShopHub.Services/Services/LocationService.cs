@@ -14,6 +14,13 @@ namespace ShopHub.Services.Services
 {
     public class LocationService : ILocation
     {
+        /*Dependency Injection Code Start
+         As we are not creating instance like
+         ProductService product = new ProductService()
+         we are creating private type of class type variable (obj)
+         which is populating from constructor. So there is not need
+         to dispose the object it will automatically dispose from memroy
+             */
         private ShopHubContext _context;
         private IMapper _mapper;
         public LocationService(ShopHubContext shopHubContext, IMapper mapper)
@@ -21,6 +28,7 @@ namespace ShopHub.Services.Services
             _context = shopHubContext;
             _mapper = mapper;
         }
+        /*Dependency Injection Code End*/
 
         public List<LocationDto> GetAllLocations()
         {
