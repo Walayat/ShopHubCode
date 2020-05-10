@@ -69,6 +69,43 @@ namespace ShopHub.Services.Services
             }
         }
 
+
+        public void MinusProductQuantity(int productId, int quantity)
+        {
+            try
+            {
+                var product = _context.Products.FirstOrDefault(x => x.Id == productId);
+                product.Quantity = quantity;
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public List<ProductDto> GetProductsByLocationId(int locationId)
+        {
+            try
+            {
+                var product = _context.Products.Include(x => x.Location).Where(x => x.LocationId == locationId).ToList();
+                if (!(product is null) && product.Count > 0)
+                {
+                    return _mapper.Map<List<ProductDto>>(product);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public List<ProductDto> GetAllProducts()
         {
             var products = _context.Products.Include(x=>x.Location).ToList();

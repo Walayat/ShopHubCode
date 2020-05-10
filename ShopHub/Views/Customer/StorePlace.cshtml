@@ -1,0 +1,173 @@
+﻿@model ShopHub.Models.Dtos.ProductDto
+@using  ShopHub.Services.Interface
+@inject ISessionManager _sessionManager
+@using  ShopHub.Services.Utilities.Enums
+
+@{
+    ViewData["Title"] = "StorePlace";
+    var name = _sessionManager.GetUserName();
+    var userId = _sessionManager.GetUserId();
+    var userTypeId = _sessionManager.GetUserTypeId();
+}
+
+
+<div class="sidenav">
+    <ul class="leftSideUl">
+        <li><h2 class="shopHubHeading">Shop Hub</h2></li>
+
+        @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
+        {
+            <li><a asp-action="AllOrderHistory" asp-controller="Admin">All Order History</a></li>
+            <li><a asp-action="LocationOrderHistory" asp-controller="Admin">Location By Order</a></li>
+            <li><a asp-action="Location" asp-controller="Admin">Manage Locations</a></li>
+            <li><a asp-action="ProductList" asp-controller="Admin">Manage Products</a></li>
+        }
+        else
+        {
+            <li><a asp-action="StorePlace" asp-controller="Customer">Stores</a></li>
+            <li><a asp-action="OrderHistory" asp-controller="Customer">Orders History</a></li>
+        }
+
+    </ul>
+
+</div>
+
+<div class="main">
+    <div class="text-center">
+
+        <h1>Store Place</h1>
+        <hr>
+
+        <div class="form-group">
+            <label class="control-label"> Select Store Location</label>
+            <select asp-for="LocationId" id="storeDropDown" onchange="populateProducts();" class="form-control" asp-items="@(new SelectList(Model.Locations,"Id","Name"))"></select>
+            <span asp-validation-for="LocationId" class="text-danger"></span>
+        </div>
+
+
+
+        <table class="table table-bordered table-hover" id="storeTable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Price)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Location)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Quantity)
+                    </th>
+                    <th>
+                        Order
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody id="productsBody">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+@section scripts{
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        var productName = "";
+        var price;
+        var quantity;
+        var locationName = "";
+
+        $(document).ready(function () {
+            $('#storeDropDown').trigger('change');
+        });
+
+        function populateProducts() {
+            var locationValue = $('#storeDropDown').val();
+
+            $.get("/Customer/GetProductsAgainstLocation", { locationId: locationValue }).done(function (data) {
+                debugger;
+
+                $('#storeTable').show();
+                $('#productsBody').html("");
+
+
+                var tableBody = $('#productsBody');
+                for (var i = 0; i < data.length; i++) {
+                    row = $('<tr></tr>');
+                    productName = $('<td></td>').text(data[i].name);
+                    price = $('<td></td>').text(data[i].price);
+                    locationName = $('<td></td>').text(data[i].location.name);
+                    quantity = $('<td></td>');
+                    quantity.append('<input id="quantityValue-' + data[i].id + '" class="quantityValue" type="number"/> <input type="hidden" value="' + data[i].quantity + '" id="quantityHidden-' + data[i].id + '" />');
+
+                    var button = $('<td></td>');
+                    button.append('<buttton class="btn btn-success" onclick="placeOrder(' + data[i].id + ');" style="cursor:pointer" id="orderButton"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>');
+
+                    row.append(productName);
+                    row.append(price);
+                    row.append(locationName);
+                    row.append(quantity);
+                    row.append(button);
+                    tableBody.append(row);
+                }
+
+
+            });
+        }
+
+        function placeOrder(productId) {
+            debugger;
+            var quantityRequire = $('#quantityValue-' + productId).val();
+            var availableQuantity = $("#quantityHidden-" + productId).val();
+
+            if (parseInt(quantityRequire) > parseInt(availableQuantity)) {
+                new PNotify({
+                    title: 'Error!',
+                    text: 'You have ordered which is more than our stock',
+                    delay: 3000,
+                    type: 'error',
+                    addclass: 'pnotify-center'
+                });
+                return false;
+            }
+
+            if (!quantityRequire) {
+                new PNotify({
+                    title: 'Error!',
+                    text: 'Please define your quantity for order',
+                    delay: 3000,
+                    type: 'error',
+                    addclass: 'pnotify-center'
+                });
+            }
+            else {
+
+                $.get("/Customer/PlaceOrder", { userId: @userId, productId: productId, quantity: parseInt(quantityRequire), actualStockQuantity: parseInt(availableQuantity)}).done(function (data) {
+                    debugger;
+                    
+                    if (!data.isError) {
+                        $('#quantityValue-' + productId).val('');
+                        new PNotify({
+                            title: 'Success!',
+                            text: data.message,
+                            delay: 3000,
+                            type: 'success',
+                            addclass: 'pnotify-center'
+                        });
+                    }
+                });
+            }
+        }
+
+
+
+    </script>
+
+}

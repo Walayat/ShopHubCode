@@ -36,6 +36,7 @@ namespace ShopHub
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILocation, LocationService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddTransient<ShopHubContext>();
             services.AddSession(options =>
@@ -55,6 +56,11 @@ namespace ShopHub
             services.AddSingleton(mapper);
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

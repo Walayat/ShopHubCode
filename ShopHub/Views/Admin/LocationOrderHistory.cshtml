@@ -1,12 +1,12 @@
-﻿@using  ShopHub.Services.Interface
+﻿@model ShopHub.Models.Dtos.OrderDto
+@using  ShopHub.Services.Interface
 @inject ISessionManager _sessionManager
 @using  ShopHub.Services.Utilities.Enums
 
-
-
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "OrderHistory";
     var name = _sessionManager.GetUserName();
+    var userId = _sessionManager.GetUserId();
     var userTypeId = _sessionManager.GetUserTypeId();
 }
 
@@ -31,10 +31,38 @@
 
 </div>
 
+
 <div class="main">
     <div class="text-center">
-        <h1 class="display-4">Welcome @name</h1>
+
+        <h1>Store Order History</h1>
+        <hr>
+
+        <div class="form-group">
+            <label class="control-label"> Select Store Location</label>
+            <select asp-for="LocationId" id="locationDropDown" onchange="populateOders();" class="form-control" asp-items="@(new SelectList(Model.Locations,"Id","Name"))"></select>
+            <span asp-validation-for="LocationId" class="text-danger"></span>
+        </div>
+
 
     </div>
 
 </div>
+
+
+
+@section scripts{
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+
+ <script type="text/javascript">
+     function populateOders() {
+         var locationValue = $('#locationDropDown').val();
+
+         $.get("/Admin/LocationBaseOrderData", { locationId: locationValue }).done(function (data) {
+
+             debugger;
+         });
+     }
+ </script>
+
+}

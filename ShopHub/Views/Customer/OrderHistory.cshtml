@@ -1,15 +1,14 @@
-﻿@model ShopHub.Models.Dtos.LocationDto
+﻿@model IEnumerable<ShopHub.Models.Models.Order>
 @using  ShopHub.Services.Interface
 @inject ISessionManager _sessionManager
 @using  ShopHub.Services.Utilities.Enums
 
 
 @{
-    ViewData["Title"] = "Locations";
+    ViewData["Title"] = "OrderHistory";
     var name = _sessionManager.GetUserName();
     var userTypeId = _sessionManager.GetUserTypeId();
 }
-
 
 <div class="sidenav">
     <ul class="leftSideUl">
@@ -25,7 +24,7 @@
         else
         {
             <li><a asp-action="StorePlace" asp-controller="Customer">Stores</a></li>
-            <li><a href="#services">Orders History</a></li>
+            <li><a asp-action="OrderHistory" asp-controller="Customer">Orders History</a></li>
         }
 
     </ul>
@@ -34,32 +33,23 @@
 
 <div class="main">
     <div class="text-center">
-        <h4>Location</h4>
-        <hr />
-        <div class="row">
-            <div class="col-md-4">
-                <form asp-action="CreateLocation">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-primary" />
-                    </div>
-                </form>
-            </div>
-        </div>
 
-        <div>
-            <a asp-action="Location">Back to List</a>
-        </div>
+        <h1>Order History</h1>
+        <hr />
+        @foreach (var item in Model)
+        {
+            <div class="card w-75 card_margin">
+                <div class="card-body">
+                    <h5 class="card-title">Your order info</h5>
+                    <p class="card-text">Dear<b> @item.User.FirstName  @item.User.LastName </b> you have placed an order with following details: </p>
+                    <p class="card-text">Order placed at @item.Timestamp.ToString("MM/dd/yyyy h:mm tt")</p>
+                    <p class="card-text">Your order product is <b>@item.Product.Name</b> with <b>@item.Quantity</b> quantities</p>
+                    <p class="card-text">Location logged is <b>@item.Product.Location.Name</b></p>
+                </div>
+            </div>
+        }
+
 
     </div>
 
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

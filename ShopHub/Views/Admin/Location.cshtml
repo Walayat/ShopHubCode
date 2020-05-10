@@ -16,13 +16,14 @@
 
         @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
         {
-            <li><a href="#about">Order History</a></li>
-            <li><a asp-action="Location" asp-controller="Admin">Location</a></li>
-            <li><a asp-action="CreateProduct" asp-controller="Admin">Manage Products</a></li>
+            <li><a asp-action="AllOrderHistory" asp-controller="Admin">All Order History</a></li>
+            <li><a asp-action="LocationOrderHistory" asp-controller="Admin">Location By Order</a></li>
+            <li><a asp-action="Location" asp-controller="Admin">Manage Locations</a></li>
+            <li><a asp-action="ProductList" asp-controller="Admin">Manage Products</a></li>
         }
         else
         {
-            <li><a href="#about">Stores</a></li>
+            <li><a asp-action="StorePlace" asp-controller="Customer">Stores</a></li>
             <li><a href="#services">Orders History</a></li>
         }
 

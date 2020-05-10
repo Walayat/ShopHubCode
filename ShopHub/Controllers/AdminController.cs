@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ShopHub.Filters;
 using ShopHub.Models.Dtos;
+using ShopHub.Models.Models;
 using ShopHub.Services.Interface;
 using ShopHub.Services.Utilities.Enums;
 
@@ -16,16 +17,13 @@ namespace ShopHub.Controllers
     {
         private ILocation _location;
         private IProductService _productService;
-        public AdminController(ILocation location, IProductService productService)
+        private IOrderService _orderService;
+        public AdminController(ILocation location, IProductService productService, IOrderService orderService)
         {
             _location = location;
             _productService = productService;
+            _orderService = orderService;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
-
 
 
         #region Location i.e Create, Delete , List
@@ -145,6 +143,54 @@ namespace ShopHub.Controllers
             else
             {
                 return View(product);
+            }
+        }
+        #endregion
+
+        #region Customer Order History Details
+
+        //This method is for Location base order
+        //In this method I just populating the locations
+        //dropdown. Location base order history will
+        // populating with another method by making an ajax call
+        public IActionResult LocationOrderHistory()
+        {
+            OrderDto product = new OrderDto();
+
+            var locations = _location.GetAllLocations();
+            if (locations is null)
+            {
+                locations = new List<LocationDto>();
+                product.Locations = locations;
+            }
+            else
+            {
+                product.Locations = locations;
+            }
+            return View(product);
+        }
+
+        // In this method I will populate orders base on location Id
+        // This method is handy to above LocationOrderHistory method
+        // It will be call through ajax get request from LocationOrderHistory View
+        public IActionResult LocationBaseOrderData(int locationId)
+        {
+           var data = _orderService.GetAllStorOrdersByLocationId(locationId);
+           return Json(data);
+        }
+
+        // In this method all order of stors are populating
+        public IActionResult AllOrderHistory()
+        {
+            var orderDetails = _orderService.GetAllOrderHistory();
+            if (!(orderDetails is null) && orderDetails.Count > 0)
+            {
+                return View(orderDetails);
+            }
+            else
+            {
+                orderDetails = new List<Order>();
+                return View(orderDetails);
             }
         }
         #endregion

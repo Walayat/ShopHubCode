@@ -12,5 +12,7 @@ namespace ShopHub.Services.Interface
         public bool RemoveProduct(int productId);
         public ProductDto GetProductById(int productId);
         public ProductDto UpdateProduct(ProductDto product);
+        public List<ProductDto> GetProductsByLocationId(int locationId);
+        public void MinusProductQuantity(int productId, int quantity);
     }
 }
