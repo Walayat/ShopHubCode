@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ShopHub.Models.Dtos.LocationDto>
+@using  ShopHub.Services.Interface
+@inject ISessionManager _sessionManager
+@using  ShopHub.Services.Utilities.Enums
+
+@{
+    ViewData["Title"] = "Location";
+    var name = _sessionManager.GetUserName();
+    var userTypeId = _sessionManager.GetUserTypeId();
+}
+
+
+<div class="sidenav">
+    <ul class="leftSideUl">
+        <li><h2 class="shopHubHeading">Shop Hub</h2></li>
+
+        @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
+        {
+            <li><a href="#about">Order History</a></li>
+            <li><a asp-action="Location" asp-controller="Admin">Location</a></li>
+            <li><a asp-action="CreateProduct" asp-controller="Admin">Manage Products</a></li>
+        }
+        else
+        {
+            <li><a href="#about">Stores</a></li>
+            <li><a href="#services">Orders History</a></li>
+        }
+
+    </ul>
+
+</div>
+
+<div class="main">
+    <div class="text-center">
+
+        <p></p>
+        <p>
+            <a asp-action="CreateLocation">Create New</a>
+        </p>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            <a href="/Admin/DeleteLocation/?locationId=@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+

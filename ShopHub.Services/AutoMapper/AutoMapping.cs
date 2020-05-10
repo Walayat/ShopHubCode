@@ -12,6 +12,8 @@ namespace ShopHub.Services.AutoMapper
         public AutoMapping()
         {
             CreateMap<User, UserAuthDto>().ReverseMap();
+            CreateMap<Location, LocationDto>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
         }
     }
 }

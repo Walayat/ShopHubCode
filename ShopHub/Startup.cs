@@ -34,6 +34,8 @@ namespace ShopHub
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISessionManager, SessionManager>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILocation, LocationService>();
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddTransient<ShopHubContext>();
             services.AddSession(options =>

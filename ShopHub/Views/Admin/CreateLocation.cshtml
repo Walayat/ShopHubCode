@@ -1,0 +1,64 @@
+﻿@model ShopHub.Models.Dtos.LocationDto
+@using  ShopHub.Services.Interface
+@inject ISessionManager _sessionManager
+@using  ShopHub.Services.Utilities.Enums
+
+
+@{
+    ViewData["Title"] = "Locations";
+    var name = _sessionManager.GetUserName();
+    var userTypeId = _sessionManager.GetUserTypeId();
+}
+
+
+<div class="sidenav">
+    <ul class="leftSideUl">
+        <li><h2 class="shopHubHeading">Shop Hub</h2></li>
+
+        @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
+        {
+            <li><a href="#about">Order History</a></li>
+            <li><a asp-action="Location" asp-controller="Admin">Location</a></li>
+            <li><a asp-action="CreateProduct" asp-controller="Admin">Manage Products</a></li>
+        }
+        else
+        {
+            <li><a href="#about">Stores</a></li>
+            <li><a href="#services">Orders History</a></li>
+        }
+
+    </ul>
+
+</div>
+
+<div class="main">
+    <div class="text-center">
+        <h4>Location</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="CreateLocation">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Location">Back to List</a>
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

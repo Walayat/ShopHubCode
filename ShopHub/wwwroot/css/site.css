@@ -69,3 +69,54 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+/*For left side nav*/
+.sidenav {
+    width: 260px;
+    height: 800px;
+    position: fixed;
+    z-index: 1;
+    top: 68px;
+    left: 10px;
+    background: #eee;
+    overflow-x: hidden;
+    padding: 8px 0;
+}
+
+.sidenav a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #2196F3;
+    display: block;
+    margin-left: 12px;
+}
+
+.sidenav a:hover {
+    color: #064579;
+}
+
+.shopHubHeading {
+    margin-left: 27px;
+}
+
+.main {
+    margin-left: 140px; /* Same width as the sidebar + left position in px */
+    font-size: 28px; /* Increased text to enable scrolling */
+    padding: 0px 10px;
+}
+
+.leftSideUl {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.bottomDiv{
+    text-align:right;
+}
+
+.ProductDiv {
+    margin-left: 5%;
+}

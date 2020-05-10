@@ -1,14 +1,40 @@
 ﻿@using  ShopHub.Services.Interface
 @inject ISessionManager _sessionManager
+@using  ShopHub.Services.Utilities.Enums
+
+
 
 @{
     ViewData["Title"] = "Home Page";
     var name = _sessionManager.GetUserName();
+    var userTypeId = _sessionManager.GetUserTypeId();
 
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome @name</h1>
-    
+<div class="sidenav">
+    <ul class="leftSideUl">
+        <li><h2 class="shopHubHeading">Shop Hub</h2></li>
+
+        @if (userTypeId.Equals(Convert.ToInt32(UserTypeNames.Admin)))
+        {
+            <li><a href="#about">Order History</a></li>
+            <li><a asp-action="Location" asp-controller="Admin">Location</a></li>
+            <li><a asp-action="CreateProduct" asp-controller="Admin">Manage Products</a></li>
+        }
+        else
+        {
+            <li><a href="#about">Stores</a></li>
+            <li><a href="#services">Orders History</a></li>
+        }
+
+    </ul>
+
 </div>
 
+<div class="main">
+    <div class="text-center">
+        <h1 class="display-4">Welcome @name</h1>
+
+    </div>
+
+</div>
