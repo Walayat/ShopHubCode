@@ -1,25 +1,36 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ShopHub.Controllers;
+using ShopHub.Models.Context;
+using ShopHub.Models.Dtos;
 using ShopHub.Models.Models;
 using ShopHub.Services.Interface;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace ShopHub.Test
 {
     public class UnitTest
     {
-        private IProductService _productService;
-        private ILocation _location;
-        private IOrderService _orderService;
-        private ISessionManager _sessionManager;
-        public UnitTest(IProductService productService, ILocation location, IOrderService orderService, ISessionManager sessionManager)
+        //private IProductService _productService;
+        private Mock<ILocation> _location;
+        private Mock<IOrderService> _orderService;
+        private Mock<ISessionManager> _sessionManager;
+        private Mock<ShopHubContext> _context;
+        private Mock<IMapper> _mapper;
+        private Mock<IProductService> _productService;
+        public UnitTest()
         {
-            _productService = productService;
-            _location = location;
-            _orderService = orderService;
-            _sessionManager = sessionManager;
+            _productService = new Mock<IProductService>();
+            _location = new Mock<ILocation>();
+            _orderService = new Mock<IOrderService>();
+            _sessionManager = new Mock<ISessionManager>();
+            _context = new Mock<ShopHubContext>();
+            _mapper = new Mock<IMapper>();
         }
 
 
@@ -181,7 +192,103 @@ namespace ShopHub.Test
             // Assert
             Assert.Equal(viewName, result.ViewName);
         }
-        
-        
+
+        /*Test product list scenario using simulation list of product without interacting with database
+        In this test case we are also verifying the model count quantity are same or not.*/
+        [Fact]
+        public void Test_ProductList_AdminController()
+        {
+            // Arrange
+            var productList = new List<ProductDto>
+            {
+                new ProductDto {  Id = 1, LocationId = 2 , Name = "Test product 1", Price = "500", Quantity =20 },
+                new ProductDto {  Id = 2, LocationId = 3 , Name = "Test product 2", Price = "400", Quantity =30 }
+            };
+            _productService
+                .Setup(repo => repo.GetAllProducts())
+                .Returns(productList);
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+
+            // Act
+            var result =  controller.ProductList();
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<IEnumerable<ProductDto>>(viewResult.ViewData.Model);
+            Assert.Equal(2, model.Count());
+        }
+
+
+        /*Test create product Post Method scenario using simulation object without interacting with database
+          In this test case we are also verifying redirect to action Name value after successfull
+          creation of product.*/
+        [Fact]
+        public void CreateProduct_When_ModelState_IsValid_AdminController()
+        {
+            // Arrange
+
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+            var newEmployee = HelperMethods.GetTestProduct();
+
+            // Act
+            var result = controller.CreateProduct(newEmployee);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Null(redirectToActionResult.ControllerName);
+            Assert.Equal("ProductList", redirectToActionResult.ActionName);
+            _productService.Verify();
+        }
+
+
+        /*Test create product Get Method scenario using simulation object without interacting with database
+          In this test case we are also verifying redirect to action Name value after successfull
+          creation of product.*/
+        [Fact]
+        public void CreateProduct_GetMethod_AdminController()
+        {
+            // Arrange
+
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+            var newEmployee = HelperMethods.GetTestProduct();
+
+            // Act
+            var result = controller.CreateProduct(newEmployee);
+
+            // Assert
+            //Assert.IsType(ProductDto,  viewResult.Model);
+            _productService.Verify();
+
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsAssignableFrom<ProductDto>(viewResult.ViewData.Model);
+            //Assert.Equal(2, model);
+        }
+
+        /*Test product list scenario using simulation list of product without interacting with database
+        In this test case we are also verifying the model count quantity are same or not.*/
+        [Fact]
+        public void Test_LocationList_AdminController()
+        {
+            // Arrange
+            var locationList = new List<LocationDto>
+            {
+                new LocationDto {  Id = 1, Name = "Test location1"},
+                new LocationDto {  Id = 2, Name = "Test location2"},
+            };
+            _location
+                .Setup(repo => repo.GetAllLocations())
+                .Returns(locationList);
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+
+            // Act
+            var result = controller.CreateProduct();
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            //var model = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(viewResult.ViewData.Model.Locations);
+            //Assert.Equal(2, model.Count());
+        }
+
+
     }
 }

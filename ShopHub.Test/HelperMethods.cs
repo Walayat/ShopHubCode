@@ -45,5 +45,17 @@ namespace ShopHub.Test
         }
 
 
+        public static ProductDto GetTestProduct()
+        {
+            return new ProductDto()
+            {
+                Id = 1,
+                LocationId = 1,
+                Name = "New Product",
+                Price = "100",
+                Quantity = 200
+            };
+        }
+
     }
 }
