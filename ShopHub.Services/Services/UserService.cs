@@ -22,6 +22,7 @@ namespace ShopHub.Services.Services
             _mapper = mapper;
         }
 
+        //This method is use to register user to our database
         public async Task<User> RegisterUser(UserAuthDto user)
         {
             user.UserTypeId = Convert.ToInt32(UserTypeNames.Customer);
@@ -32,6 +33,8 @@ namespace ShopHub.Services.Services
             return mappedData;
         }
 
+        /*This method is use to authenticate user to our database, like 
+         FirstName, LastName, Password is matching to some record or not*/
         public async Task<UserAuthDto> AuthUser(UserAuthDto user)
         {
             var record = await _context.Users.FirstOrDefaultAsync(x => (x.FirstName.ToLower().Equals(user.FirstName)) 

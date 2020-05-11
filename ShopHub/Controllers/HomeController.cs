@@ -26,9 +26,16 @@ namespace ShopHub.Controllers
             return View();
         }
 
+        //This method will call when an simple user will try to access admin pages from URL
         public IActionResult AccessDenied()
         {
             return View();
         }
+
+        public IActionResult Error()
+        {
+            return View();
+        }
+
     }
 }

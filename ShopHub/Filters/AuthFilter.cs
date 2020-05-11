@@ -10,6 +10,17 @@ using System.Threading.Tasks;
 
 namespace ShopHub.Filters
 {
+    /* In Asp.net Mvc there are five types of different filters which runs
+     before and after the request came to specific method or controllers.
+     One of them is "ActionFilterAttribute" which having method OnActionExecuting
+     We are using this filter i.e AuthFilter to our controllers to filter out users
+     according to their userTypes or we can say role type.
+
+     This is AuthFilter means user authentication and authorization filter.
+     It checks wheather sessions of user are available or not, if sessions are
+     not available it will redirect user to login page.
+     And if user is not an admin then user cannot be visit the admin pages i.e authorization work.
+        */
     public class AuthFilter : ActionFilterAttribute
     {
         public string[] Roles { get; set; }

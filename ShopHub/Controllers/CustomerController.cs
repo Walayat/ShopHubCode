@@ -30,6 +30,7 @@ namespace ShopHub.Views.Home
             return View();
         }
 
+        //This method is use to populate location dropdown on store page
         public IActionResult StorePlace()
         {
             ProductDto product = new ProductDto();
@@ -47,6 +48,10 @@ namespace ShopHub.Views.Home
             return View(product);
         }
 
+        /*This method is the handy method to above one, as location will select from dropdown this method will render
+         all products of selected location.
+         This method return json array of products to view and we are populating these arrays to our view in tables.
+             */
         public IActionResult GetProductsAgainstLocation(int locationId)
         {
             var products = _productService.GetProductsByLocationId(locationId);
@@ -61,6 +66,7 @@ namespace ShopHub.Views.Home
             }
         }
 
+        //This method will use when customer place their order to stores
         public IActionResult PlaceOrder(int userId, int productId, int quantity, int actualStockQuantity)
         {
             OrderDto order = new OrderDto()
@@ -77,6 +83,7 @@ namespace ShopHub.Views.Home
             return Json(returnobj);
         }
 
+        //Customer can view their order history using this method
         public IActionResult OrderHistory()
         {
             var userId = _sessionManager.GetUserId();

@@ -9,6 +9,7 @@
     var userTypeId = _sessionManager.GetUserTypeId();
 }
 <html lang="en">
+<!--Style section-->
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,6 +20,7 @@
     <link href="~/css/pnotify.custom.min.css" rel="stylesheet" />
 </head>
 <body>
+    <!--This is the top navbar header which share to every page-->
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -58,6 +60,7 @@
         </nav>
     </header>
 
+    <!-- Side navbar which is appearing on every page -->
     <div class="sidenav">
         <ul class="leftSideUl">
             <li><h2 class="shopHubHeading">Shop Hub</h2></li>
@@ -79,13 +82,16 @@
 
     </div>
 
-
+    <!-- This is the main div in which html of open page is load
+        For example if I open up admin page then RenderBody() render 
+        all the html content to this div
+        -->
     <div class="container">
         <main role="main" class="pb-3 main">
             @RenderBody()
         </main>
     </div>
-
+    <!--This is the footer div, appear at every page bottom-->
     <footer class="border-top footer text-muted">
         <div class="container">
             <div class="bottomDiv">
@@ -93,6 +99,8 @@
             </div>
         </div>
     </footer>
+
+    <!--These are the common javascript scripts files which are using at every page who uses this _Layout.cshtml-->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/pnotify.custom.min.js"></script>

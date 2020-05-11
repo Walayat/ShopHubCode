@@ -21,91 +21,56 @@ namespace ShopHub.Services.Services
             _mapper = mapper;
         }
 
+        //This method is used to add product to database
         public ProductDto AddProduct(ProductDto product)
         {
-            try
-            {
-                var mappedData = _mapper.Map<Product>(product);
-                _context.Products.Add(mappedData);
-                _context.SaveChanges();
+            var mappedData = _mapper.Map<Product>(product);
+            _context.Products.Add(mappedData);
+            _context.SaveChanges();
 
-                return _mapper.Map<ProductDto>(mappedData);
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            return _mapper.Map<ProductDto>(mappedData);
         }
 
+        //This method is used to update product to database
         public ProductDto UpdateProduct(ProductDto product)
         {
-            try
-            {
-                var record = _context.Products.Find(product.Id);
-                _context.Entry(record).CurrentValues.SetValues(product);
-                _context.SaveChanges();
+            var record = _context.Products.Find(product.Id);
+            _context.Entry(record).CurrentValues.SetValues(product);
+            _context.SaveChanges();
 
-                return _mapper.Map<ProductDto>(record);
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            return _mapper.Map<ProductDto>(record);
         }
 
+        //This method is used to get product by productId from database
         public ProductDto GetProductById(int productId)
         {
-            try
-            {
-                var product = _context.Products.Include(x=>x.Location).FirstOrDefault(x => x.Id == productId);
-                return _mapper.Map<ProductDto>(product);
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            var product = _context.Products.Include(x=>x.Location).FirstOrDefault(x => x.Id == productId);
+            return _mapper.Map<ProductDto>(product);
         }
 
-
+        //This method is used to minus product quantity to our stock when user have place their orders
         public void MinusProductQuantity(int productId, int quantity)
         {
-            try
-            {
-                var product = _context.Products.FirstOrDefault(x => x.Id == productId);
-                product.Quantity = quantity;
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            var product = _context.Products.FirstOrDefault(x => x.Id == productId);
+            product.Quantity = quantity;
+            _context.SaveChanges();
         }
 
+        //This method is used to get products by specific locationId
         public List<ProductDto> GetProductsByLocationId(int locationId)
         {
-            try
+            var product = _context.Products.Include(x => x.Location).Where(x => x.LocationId == locationId).ToList();
+            if (!(product is null) && product.Count > 0)
             {
-                var product = _context.Products.Include(x => x.Location).Where(x => x.LocationId == locationId).ToList();
-                if (!(product is null) && product.Count > 0)
-                {
-                    return _mapper.Map<List<ProductDto>>(product);
-                }
-                else
-                {
-                    return null;
-                }
+                return _mapper.Map<List<ProductDto>>(product);
             }
-            catch (Exception ex)
+            else
             {
-
-                throw ex;
+                return null;
             }
         }
 
+        //This method is used to get all products without specifying location
         public List<ProductDto> GetAllProducts()
         {
             var products = _context.Products.Include(x=>x.Location).ToList();
@@ -119,6 +84,7 @@ namespace ShopHub.Services.Services
             }
         }
 
+        //This method is used to remove product from database
         public bool RemoveProduct(int productId)
         {
             var record = _context.Products.FirstOrDefault(x => x.Id == productId);

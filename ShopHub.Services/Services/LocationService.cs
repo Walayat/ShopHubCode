@@ -17,8 +17,8 @@ namespace ShopHub.Services.Services
         /*Dependency Injection Code Start
          As we are not creating instance like
          ProductService product = new ProductService()
-         we are creating private type of class type variable (obj)
-         which is populating from constructor. So there is not need
+         we are creating private types of class type variable (obj)
+         which is populating from constructor. So there is no need
          to dispose the object it will automatically dispose from memroy
              */
         private ShopHubContext _context;
@@ -30,6 +30,10 @@ namespace ShopHub.Services.Services
         }
         /*Dependency Injection Code End*/
 
+        /*This mehod I am using to get all locations from location table*/
+        /*Using _context which is of type DbContext we are using this
+          to access our database tables and then apply queries on it. 
+         */
         public List<LocationDto> GetAllLocations()
         {
             var locations =  _context.Locations.ToList();
@@ -43,24 +47,26 @@ namespace ShopHub.Services.Services
             }
         }
 
+        /*This mehod I am using to create location.
+         _context.Locations.Add(mappedData) using this I am adding object to our context location table
+          but record will not save to database untill we will call _context.SaveChanges().
+          SaveChanges() initiate the changes to database.
+          ** Automapper **
+          One more concept here I am using i.e AutoMapper
+          Automapper help us to map one class of fields to other one's, it mapps only the similar fields.
+             */
         public LocationDto CreateLocation(LocationDto location)
         {
-            try
-            {
-                var mappedData = _mapper.Map<Location>(location);
-                mappedData.Products = new List<Product>();
+            var mappedData = _mapper.Map<Location>(location);
+            mappedData.Products = new List<Product>();
 
-                _context.Locations.Add(mappedData);
-                _context.SaveChanges();
+            _context.Locations.Add(mappedData);
+            _context.SaveChanges();
 
-                return _mapper.Map<LocationDto>(mappedData);
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
+            return _mapper.Map<LocationDto>(mappedData);
         }
+
+        /*This mehod I am using to remove location from database */
 
         public bool RemoveLocation(int locationId)
         {

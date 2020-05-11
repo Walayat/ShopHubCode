@@ -12,12 +12,13 @@ namespace ShopHub.Models.Dtos
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public DateTime Timestamp { get; set; }
+        public string StrTimestamp { get; set; }
         public bool IsSucceedOrder { get; set; }
         public int ActualStockQuantity { get; set; }
         public List<LocationDto> Locations { get; set; }
         public int LocationId { get; set; }
         public string ProductName { get; set; }
         public string CustomerName { get; set; }
-
+        public int Price { get; set; }
     }
 }

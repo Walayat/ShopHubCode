@@ -14,32 +14,35 @@
             <select asp-for="LocationId" id="locationDropDown" onchange="populateOders();" class="form-control" asp-items="@(new SelectList(Model.Locations,"Id","Name"))"></select>
             <span asp-validation-for="LocationId" class="text-danger"></span>
         </div>
+        <div id="tableDiv">
+            <table class="table table-bordered table-hover" id="dataTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Order Id
+                        </th>
+                        <th>
+                            Customer Name
+                        </th>
+                        <th>
+                            Product Name
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Timestamp
+                        </th>
+                        <th>
+                            Price
+                        </th>
 
-        <table class="table table-bordered table-hover" id="dataTable">
-            <thead>
-                <tr>
-                    <th>
-                        Customer Name
-                    </th>
-                    <th>
-                        Quantity
-                    </th>
-
-                    <th>
-                        Product Name
-                    </th>
-                    <th>
-                        Timestamp
-                    </th>
-                    <th>
-                        Order
-                    </th>
-
-                </tr>
-            </thead>
-            <tbody id="productsBody">
-            </tbody>
-        </table>
+                    </tr>
+                </thead>
+                <tbody id="orderBody">
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -51,19 +54,44 @@
     <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
 
 
-        <script type="text/javascript">
-            $(document).ready(function () {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#locationDropDown').trigger("change");
+        });
+        function populateOders() {
+            var locationValue = $('#locationDropDown').val();
+
+            $.get("/Admin/LocationBaseOrderData", { locationId: locationValue }).done(function (data) {
+                debugger;
+                $('#tableDiv').html('');
+                $('#dataTable_wrapper').remove();
+                $('#tableDiv').append('<table class="table table-bordered table-hover" id="dataTable"><thead><tr><th>Order Id</th><th>Customer Name</th><th>Product Name</th><th>Quantity</th><th>Timestamp</th><th>Price</th></tr></thead><tbody id="orderBody"><tbody></table>')
+
                 $('#dataTable').dataTable({
-                }); 
+                    data: data,
+                    columns: [
+                        {
+                            "data": "id",
+                            "searchable": false,
+                        },
+                        { "data": "customerName" },
+                        { "data": "productName" },
+                        {
+                            "data": "quantity",
+                            "searchable": false,
+                        },
+                        {
+                            "data": "strTimestamp",
+                            "searchable": false,
+                        },
+                        {
+                            "data": "price",
+                            "searchable": false,
+                        }
+                    ]
+                });
             });
-            function populateOders() {
-                     var locationValue = $('#locationDropDown').val();
-
-                     $.get("/Admin/LocationBaseOrderData", {locationId: locationValue }).done(function (data) {
-
-                         debugger;
-                     });
-                 }
+        }
     </script>
 
 }

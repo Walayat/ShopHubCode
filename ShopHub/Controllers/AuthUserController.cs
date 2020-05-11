@@ -21,6 +21,7 @@ namespace ShopHub.Controllers
             _userService = userService;
         }
 
+        //Register method use to register our new user to our system
         [HttpGet]
         public IActionResult Register()
         {
