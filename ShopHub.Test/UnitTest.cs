@@ -6,6 +6,7 @@ using ShopHub.Models.Context;
 using ShopHub.Models.Dtos;
 using ShopHub.Models.Models;
 using ShopHub.Services.Interface;
+using ShopHub.Views.Home;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -281,14 +282,112 @@ namespace ShopHub.Test
             var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
 
             // Act
-            var result = controller.CreateProduct();
+            var result = controller.Location();
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            //var model = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(viewResult.ViewData.Model.Locations);
+            var model = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(viewResult.ViewData.Model);
+            Assert.Equal(2, model.Count());
             //Assert.Equal(2, model.Count());
         }
 
 
+        /*This test case test the method logic of delete the location 
+          and confirm there is no exception occur, and verify the redirect
+          result is location or not.
+             */
+        [Fact]
+        public void DeleteLocation_Test_AdminController()
+        {
+            // Arrange
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+
+            // Act
+            var result = controller.DeleteLocation(2);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Location", redirectToActionResult.ActionName);
+        }
+
+
+        /*This test case test the method logic of delete the product 
+          and confirm there is no exception occur, and verify the redirect
+          result is ProductList or not.
+             */
+        [Fact]
+        public void DeleteProduct_Test_AdminController()
+        {
+            // Arrange
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+
+            // Act
+            var result = controller.DeleteProduct(2);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("ProductList", redirectToActionResult.ActionName);
+        }
+
+        /*This test case test the method logic of update the product 
+          and confirm there are no exception occur, and verify the redirect
+          result is ProductList or not.
+             */
+        [Fact]
+        public void UpdateProduct_Test_AdminController()
+        {
+            // Arrange
+            var controller = new AdminController(_location.Object, _productService.Object, _orderService.Object);
+            var productObj = HelperMethods.GetTestProduct();
+            // Act
+            var result = controller.UpdateProduct(productObj);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("ProductList", redirectToActionResult.ActionName);
+        }
+
+        /* Customer Controller Index return view value, as it should be null because
+           we are not returning anything to the view*/
+        [Fact]
+        public void Customer_Controller_Index_View_TestCase()
+        {
+            // Arrange
+            var controller = new CustomerController(_productService.Object, _location.Object, _orderService.Object,_sessionManager.Object);
+            string viewName = null;
+
+            // Act
+            var result = controller.Index() as ViewResult;
+
+            // Assert
+            Assert.Equal(viewName, result.ViewName);
+        }
+
+
+        /*Test product list scenario using simulation list of product without interacting with database
+        In this test case we are also verifying the model count quantity are same or not.*/
+        [Fact]
+        public void Test_GetProductsAgainstLocation_CustomerController()
+        {
+            // Arrange
+            var productList = new List<ProductDto>
+            {
+                new ProductDto {  Id = 1, LocationId = 2 , Name = "Test product 1", Price = "500", Quantity =20 },
+                new ProductDto {  Id = 2, LocationId = 3 , Name = "Test product 2", Price = "400", Quantity =30 }
+            };
+            _productService
+                .Setup(repo => repo.GetProductsByLocationId(2))
+                .Returns(productList);
+            var controller = new CustomerController(_productService.Object, _location.Object, _orderService.Object, _sessionManager.Object);
+
+            // Act
+            var result = controller.GetProductsAgainstLocation(2);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            //Assert.Equal(2, jsonResult.Value);
+           // var model = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(JsonResult.);
+           // Assert.Equal(2, model.Count());
+        }
     }
 }
