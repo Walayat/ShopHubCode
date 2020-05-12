@@ -14,6 +14,21 @@ namespace ShopHub.Views.Home
     [AuthFilter(UserTypeNames.Admin,UserTypeNames.Customer)]
     public class CustomerController : Controller
     {
+        /*IProductService is a interface which contains definitions of
+          some methods and these method's implementations are in their 
+          respective services class i.e for IProductService there is a
+          service class which is ProductService.
+             */
+        /*ILocation is a interface which contains definitions of 
+          store location details. LocationService implements ILocation.
+            */
+        /*IOrderService is a interface which contains definitions of 
+           orders details. OrderService implements IOrderService.
+        */
+        /*ISessionManager is a interface which is use to set
+          and get the sessions details like Id,Name,UserTypeId of logged in user
+          SessionManager implements ISessionManager.
+        */
         private IProductService _productService;
         private ILocation _location;
         private IOrderService _orderService;
@@ -30,7 +45,7 @@ namespace ShopHub.Views.Home
             return View();
         }
 
-        //This method is use to populate location dropdown on store page
+        //This method is use to return a view of store and populate location dropdown
         public IActionResult StorePlace()
         {
             ProductDto product = new ProductDto();
@@ -66,7 +81,11 @@ namespace ShopHub.Views.Home
             }
         }
 
-        //This method will use when customer place their order to stores
+        /*This method will use when customer place their order to stores,
+          it will save order to order table using SaveOrder method.
+          This is called from frontEnd and it takes userId, ProductId 
+          , ordered quantity and actualStockQuantity of a product
+             */
         public IActionResult PlaceOrder(int userId, int productId, int quantity, int actualStockQuantity)
         {
             OrderDto order = new OrderDto()

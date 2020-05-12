@@ -53,6 +53,7 @@ namespace ShopHub.Filters
             }
             else
             {
+                // Routes are the application routes
                 if (!Roles.Contains(userTypeId))
                 {
                     context.Result = new RedirectToRouteResult("Default",

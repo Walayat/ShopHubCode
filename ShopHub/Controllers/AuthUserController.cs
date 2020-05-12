@@ -13,6 +13,13 @@ namespace ShopHub.Controllers
 {
     public class AuthUserController : Controller
     {
+        /*IUserService is a interface which contains definitions of 
+          user login and register methods. UserService implements IUserService.
+        
+        /*ISessionManager is a interface which is use to set
+          and get the sessions details like Id,Name,UserTypeId of logged in user
+          SessionManager implements ISessionManager.
+        */
         private ISessionManager _sessionManager;
         private IUserService _userService;
         public AuthUserController(ISessionManager sessionManager, IUserService userService)
@@ -21,13 +28,17 @@ namespace ShopHub.Controllers
             _userService = userService;
         }
         
-        //Register method use to register our new user to our system
+        //This method only returns view of registeration page
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        /*Register post method use to register our new user to our system
+          I am using RegisterUser to register user and afer register to
+          system I am setting the session values of logged in user.
+             */
         [HttpPost]
         public async Task<IActionResult> Register(UserAuthDto userModel)
         {
@@ -45,11 +56,18 @@ namespace ShopHub.Controllers
                 return View(userModel);
             }
         }
+        //This method only returns view of login page
         public IActionResult Login()
         {
             return View();
         }
 
+        /*Login post method use to authenticate user to our system
+        I am using _userService.AuthUser to authenticate user and afer
+        login to the system I am setting the session values of logged in 
+        user and if it is not authentic user then i am pushing an error
+        using ModelState.AddModelError .
+            */
         [HttpPost]
         public async Task<IActionResult> Login(UserAuthDto userModel)
         {
@@ -76,6 +94,9 @@ namespace ShopHub.Controllers
 
         }
 
+        /*This method is simply use to destroy sessions of
+         login in user and redirect the user to login page
+         */
         public IActionResult Logout()
         {
             _sessionManager.SessionClear();

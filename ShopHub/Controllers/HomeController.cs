@@ -15,12 +15,17 @@ namespace ShopHub.Controllers
     [AuthFilter(UserTypeNames.Admin, UserTypeNames.Customer)]
     public class HomeController : Controller
     {
+         /*ISessionManager is a interface which is use to set
+          and get the sessions details like Id,Name,UserTypeId of 
+          logged in user SessionManager implements ISessionManager.*/
+
         private readonly ISessionManager _sessionManager;
         public HomeController(ISessionManager sessionManager)
         {
             _sessionManager = sessionManager;
         }
 
+        /*This is the main view arrive when customer or admin login to application*/
         public IActionResult Index()
         {
             return View();
@@ -32,6 +37,7 @@ namespace ShopHub.Controllers
             return View();
         }
 
+        //This method is added for the reason of Global Exception handling purposes
         public IActionResult Error()
         {
             return View();

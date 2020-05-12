@@ -11,6 +11,9 @@ namespace ShopHub
 {
     public class Program
     {
+        /*Program class is added automatically to the project when project is create
+         Our application contains different types of middlewares so this class initiate 
+         the Startup class which is the main runner of application. */
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();

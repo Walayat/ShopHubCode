@@ -1,7 +1,20 @@
-﻿{
+﻿/*The settings that are present in this file are going to be used when we run our application.
+  This file is only used within the local development machine. That means this 
+  file is not required when we publishing the asp.net core application to the production server.
+  If we need some settings for our application when we are deploying to production then this 
+  launch setting.json file will not use , we use appsetting.json file for settings of our app.
+
+  Below there are three sections 1: Section one contains our application project url with 
+  sslPort where issServer will going to run our application. Section two contains profile Name which is IISExpress 
+  and section 3 contains profile command name which is Project. 
+  Whenever we run our application from visual studio profile name by default is IISExpress and when we our
+  application through .Net Core CLI then profile will be Project and its application urls are different.
+*/
+
+{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:57875",
       "sslPort": 44330

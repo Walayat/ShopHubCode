@@ -9,6 +9,7 @@ namespace ShopHub.Services.AutoMapper
 {
     public class AutoMapping : Profile
     {
+        /*This method we are using to register our model class to specifc mapping dto for mapping purpose*/
         public AutoMapping()
         {
             CreateMap<User, UserAuthDto>().ReverseMap();

@@ -22,6 +22,19 @@ namespace ShopHub.Controllers
          which is populating from constructor. So there is not need
          to dispose the object it will automatically dispose from memroy
              */
+
+       /*IProductService is a interface which contains definitions of
+      some methods and these method's implementations are in their 
+      respective services class i.e for IProductService there is a
+      service class which is ProductService.
+         */
+        /*ILocation is a interface which contains definitions of 
+          store location details. LocationService implements ILocation.
+            */
+        /*IOrderService is a interface which contains definitions of 
+           orders details. OrderService implements IOrderService.
+        */
+        
         private ILocation _location;
         private IProductService _productService;
         private IOrderService _orderService;
@@ -36,6 +49,7 @@ namespace ShopHub.Controllers
 
         #region Location i.e Create, Delete , List
 
+        /*This method only return a view for create new location*/
         [HttpGet]
         public IActionResult CreateLocation()
         {
@@ -95,7 +109,10 @@ namespace ShopHub.Controllers
 
         /* Get method for create product
         Here I am using GetAllLocations service to 
-        populate locations dropdown*/
+        populate locations dropdown and returning
+        product type dto which contains list of
+        locations in it.
+             */
 
         [HttpGet]
         public IActionResult CreateProduct()
@@ -115,10 +132,12 @@ namespace ShopHub.Controllers
 
         /* Post method for create product
            In every post method I am checking 
-           the server side validation that they 
+           the server side validation using
+           ModelState.IsValid that the given model properites 
            are ok or not as defined on annoations.
            If model data is valid then I am using 
            AddProduct service to create product.
+
              */
         [HttpPost]
         public IActionResult CreateProduct(ProductDto product)
