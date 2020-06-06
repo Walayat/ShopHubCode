@@ -24,7 +24,7 @@ namespace ShopHub.Models.Models
         #endregion
 
         #region Constructors
-        private Product() { } //For Entity Framework
+        public Product() { } //For Entity Framework
         public Product(String name, String price, Location location)
         {
             Name = name;

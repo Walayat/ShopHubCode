@@ -22,7 +22,7 @@ namespace ShopHub.Models.Models
         #endregion
 
         #region Constructors
-        private Order() { } //For Entity Framework
+        public Order() { } //For Entity Framework
         public Order(User user, Product product, int quantity)
         {
             User = user;
